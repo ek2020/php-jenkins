@@ -1,0 +1,31 @@
+version: '3.3'
+services:
+  web:
+    build:
+      context: ./php
+      dockerfile: Dockerfile
+    container_name: php73
+    depends_on:
+      - db
+    volumes:
+      - ./php:/var/www/html
+    ports:
+      - 8888:80
+    expose:
+      - '80'
+  db:
+    container_name: mysql
+    image: mysql:latest
+    volumes:
+      - ./docker/mysql.d:/etc/mysql/conf.d
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+       MYSQL_ROOT_PASSWORD_FILE: "root"
+       MYSQL_DATABASE_FILE: "test"
+       MYSQL_USER_FILE: "root"
+       MYSQL_PASSWORD_FILE: "root"
+    ports:
+      - 3306:3306 
+    expose:
+      - '3306'
